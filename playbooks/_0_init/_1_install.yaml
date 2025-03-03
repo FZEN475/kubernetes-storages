@@ -1,0 +1,54 @@
+
+- name: Create backup-pvc
+  kubernetes.core.k8s:
+    state: present
+    wait: true
+    definition:
+      kind: PersistentVolumeClaim
+      apiVersion: v1
+      metadata:
+        name: backup-pvc
+        namespace: storage
+        annotations:
+          nfs.io/storage-path: "backup"
+      spec:
+        storageClassName: nfs-client
+        accessModes:
+          - ReadWriteMany
+        resources:
+          requests:
+            storage: 10Gi
+
+- name: Create source-minio-backup-pvc
+  kubernetes.core.k8s:
+    state: present
+    wait: true
+    definition:
+      kind: PersistentVolumeClaim
+      apiVersion: v1
+      metadata:
+        name: source-minio-backup-pvc
+        namespace: storage
+        annotations:
+          nfs.io/storage-path: "minio_data"
+      spec:
+        storageClassName: nfs-client
+        accessModes:
+          - ReadWriteMany
+        resources:
+          requests:
+            storage: 10Gi
+
+- name: Copy values
+  ansible.builtin.copy:
+    src: '/source/config/_0_init/values.yaml'
+    dest: '/tmp/backup_storage.yaml'
+    mode: "0640"
+
+- name: Remove CronJob
+  ansible.builtin.shell: "kubectl delete -f /tmp/backup_storage.yaml"
+  ignore_errors: true
+
+- name: Create CronJob
+  ansible.builtin.shell: "kubectl create -f /tmp/backup_storage.yaml"
+

@@ -1,0 +1,50 @@
+---
+
+- name: Get etcd minio keys list
+  ansible.builtin.shell: "etcdctl get 'config/iam/' --keys-only --prefix=true --cacert='/etc/ssl/etcd/ca_etcd.pem' --cert='/etc/ssl/etcd/client.pem' --key='/etc/ssl/etcd/client-key.pem' --endpoints='https://192.168.2.2:2381' "
+  args:
+    executable: /bin/bash
+  register: etcd_minio_keys
+
+- name: Clear etcd minio database
+  ansible.builtin.shell: "etcdctl --cacert='/etc/ssl/etcd/ca_etcd.pem' --cert='/etc/ssl/etcd/client.pem' --key='/etc/ssl/etcd/client-key.pem' --endpoints='https://192.168.2.2:2381' del {{ item }} --prefix"
+  args:
+    executable: /bin/bash
+  with_items: "{{etcd_minio_keys.stdout_lines | reject('match', '^$') }}"
+
+- name: Add stable chart repo cert-manager
+  kubernetes.core.helm_repository:
+    name: "{{ item.name }}"
+    repo_url: "{{ item.url }}"
+    repo_state: "present"
+    force_update: true
+  with_items:
+    - {name: "minio", url: "https://charts.min.io/"}
+
+- name: Copy values
+  ansible.builtin.copy:
+    src: '/source/config/_1_minio/values.yaml'
+    dest: '/tmp/values_minio.yaml'
+    mode: "0640"
+
+- name: Remove minio
+  kubernetes.core.helm:
+    name: minio
+    chart_ref: minio/minio
+    release_namespace: storage
+    create_namespace: true
+    state: absent
+    wait: yes
+    values_files:
+      - /tmp/values_minio.yaml
+
+- name: Install minio
+  kubernetes.core.helm:
+    name: minio
+    chart_ref: minio/minio
+    release_namespace: storage
+    create_namespace: true
+    state: present
+    wait: yes
+    values_files:
+      - /tmp/values_minio.yaml
