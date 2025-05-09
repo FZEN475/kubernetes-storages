@@ -341,7 +341,7 @@ podLabels: {}
 resources:
   requests:
     cpu: 1
-    memory: 2Gi
+    memory: 1Gi
 
 ## List of policies to be created after minio install
 ##
@@ -356,7 +356,12 @@ policies:
           - "s3:*"
 #        conditions:
 #          - StringEquals: '"aws:username": "gitlab"'
-
+  - name: loki
+    statements:
+      - resources:
+          - 'arn:aws:s3:::loki*/*'
+        actions:
+          - "s3:*"
 
 
 ## writeexamplepolicy policy grants creation or deletion of buckets with name
@@ -442,6 +447,10 @@ users:
     existingSecret: minio-gitlab-secrets
     existingSecretKey: gitlabPassword
     policy: gitlab
+  - accessKey: loki
+    existingSecret: minio-loki-secrets
+    existingSecretKey: gitlabPassword
+    policy: loki
 
 ## Additional Annotations for the Kubernetes Job makeUserJob
 makeUserJob:
@@ -470,6 +479,17 @@ svcaccts:
             - "s3:*"
 #          conditions:
 #            - StringEquals: '"aws:username": "gitlab"'
+
+  - accessKey: loki-sa
+    existingSecret: minio-loki-secrets
+    existingSecretKey: secretKey
+    user: loki
+    policy:
+      statements:
+        - resources:
+            - 'arn:aws:s3:::loki*/*'
+          actions:
+            - "s3:*"
   ## accessKey, secretKey and parent user to be assigned to the service accounts
   ## Add new service accounts as explained here https://min.io/docs/minio/kubernetes/upstream/administration/identity-access-management/minio-user-management.html#service-accounts
   # - accessKey: console-svcacct
@@ -570,6 +590,12 @@ buckets:
     versioning: false
     objectlocking: false
   - name: gitlab-cache
+    policy: none
+    purge: false
+    versioning: false
+    objectlocking: false
+############ loki ############ 
+  - name: loki-data
     policy: none
     purge: false
     versioning: false
