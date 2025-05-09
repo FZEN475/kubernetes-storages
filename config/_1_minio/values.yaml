@@ -449,7 +449,7 @@ users:
     policy: gitlab
   - accessKey: loki
     existingSecret: minio-loki-secrets
-    existingSecretKey: gitlabPassword
+    existingSecretKey: lokiPassword
     policy: loki
 
 ## Additional Annotations for the Kubernetes Job makeUserJob
