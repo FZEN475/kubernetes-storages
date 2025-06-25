@@ -11,5 +11,8 @@
 #    - name: Install pgsql.
 #      ansible.builtin.include_tasks: ./_2_pgsql/_1_install.yaml
 #
-    - name: Install redis.
-      ansible.builtin.include_tasks: ./_3_redis/_1_install.yaml
+#    - name: Install redis.
+#      ansible.builtin.include_tasks: ./_3_redis/_1_install.yaml
+
+    - name: Install kafka.
+      ansible.builtin.include_tasks: ./_4_kafka/_1_install.yaml

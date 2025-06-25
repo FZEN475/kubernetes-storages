@@ -1,0 +1,37 @@
+---
+- name: Add stable chart repo kafka
+  kubernetes.core.helm_repository:
+    name: "{{ item.name }}"
+    repo_url: "{{ item.url }}"
+    repo_state: "present"
+    force_update: true
+  with_items:
+    - {name: "bitnami", url: "https://charts.bitnami.com/bitnami"}
+
+- name: Copy values
+  ansible.builtin.copy:
+    src: '/source/config/_4_kafka/values.yaml'
+    dest: '/tmp/values_kafka.yaml'
+    mode: "0640"
+
+- name: Remove kafka
+  kubernetes.core.helm:
+    name: kafka
+    chart_ref: bitnami/kafka
+    release_namespace: storage
+    create_namespace: true
+    state: absent
+    wait: true
+    values_files:
+      - /tmp/values_kafka.yaml
+
+- name: Install kafka
+  kubernetes.core.helm:
+    name: kafka
+    chart_ref: bitnami/kafka
+    release_namespace: storage
+    create_namespace: true
+    state: present
+    wait: true
+    values_files:
+      - /tmp/values_kafka.yaml
