@@ -232,13 +232,13 @@ sasl:
   ## @param sasl.enabledMechanisms Comma-separated list of allowed SASL mechanisms when SASL listeners are configured. Allowed types: `PLAIN`, `SCRAM-SHA-256`, `SCRAM-SHA-512`, `OAUTHBEARER`
   ## NOTE: At the moment, Kafka Raft mode does not support SCRAM, that is why only PLAIN is configured.
   ##
-  enabledMechanisms: SCRAM-SHA-256
+  enabledMechanisms: PLAIN,SCRAM-SHA-256
   ## @param sasl.interBrokerMechanism SASL mechanism for inter broker communication.
   ##
   interBrokerMechanism: SCRAM-SHA-256
   ## @param sasl.controllerMechanism SASL mechanism for controller communications.
   ##
-  controllerMechanism: SCRAM-SHA-256
+  controllerMechanism: PLAIN
   ## Settings for OAuthBearer mechanism
   ## @param sasl.oauthbearer.tokenEndpointUrl The URL for the OAuth/OIDC identity provider
   ## @param sasl.oauthbearer.jwksEndpointUrl The OAuth/OIDC provider URL from which the provider's JWKS (JSON Web Key Set) can be retrieved

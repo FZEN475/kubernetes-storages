@@ -1,12 +1,12 @@
 ---
-- name: Add stable chart repo kafka
-  kubernetes.core.helm_repository:
-    name: "{{ item.name }}"
-    repo_url: "{{ item.url }}"
-    repo_state: "present"
-    force_update: true
-  with_items:
-    - {name: "bitnami", url: "https://charts.bitnami.com/bitnami"}
+#- name: Add stable chart repo kafka
+#  kubernetes.core.helm_repository:
+#    name: "{{ item.name }}"
+#    repo_url: "{{ item.url }}"
+#    repo_state: "present"
+#    force_update: true
+#  with_items:
+#    - {name: "bitnami", url: "https://charts.bitnami.com/bitnami"}
 
 - name: Copy values
   ansible.builtin.copy:
