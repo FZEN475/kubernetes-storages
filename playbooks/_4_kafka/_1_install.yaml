@@ -32,6 +32,6 @@
     release_namespace: storage
     create_namespace: true
     state: present
-    wait: true
+    wait: false
     values_files:
       - /tmp/values_kafka.yaml
