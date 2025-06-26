@@ -294,7 +294,7 @@ sasl:
 tls:
   ## @param tls.type Format to use for TLS certificates. Allowed types: `JKS` and `PEM`
   ##
-  type: PEM
+  type: JKS
   ## @param tls.pemChainIncluded Flag to denote that the Certificate Authority (CA) certificates are bundled with the endpoint cert.
   ## Certificates must be in proper order, where the top certificate is the leaf and the bottom certificate is the top-most intermediate CA.
   ##
@@ -344,16 +344,16 @@ tls:
   ##
   ## NOTE: Alternatively, a single key and certificate can be provided for all nodes under the keys 'tls.crt' and 'tls.key'. These certificates will be used by all nodes unless overridden by the 'kafka-<role>-X.key' and 'kafka-<role>-X.crt' files
   ##
-  existingSecret: "cm-kafka-tls"
+  existingSecret: "cm-kafka-jks"
   ## @param tls.passwordsSecret Name of the secret containing the password to access the JKS files or PEM key when they are password-protected. (`key`: `password`)
   ##
-  passwordsSecret: ""
+  passwordsSecret: "kafka-secrets"
   ## @param tls.passwordsSecretKeystoreKey The secret key from the tls.passwordsSecret containing the password for the Keystore.
   ##
-  passwordsSecretKeystoreKey: keystore-password
+  passwordsSecretKeystoreKey: jks-cert-password
   ## @param tls.passwordsSecretTruststoreKey The secret key from the tls.passwordsSecret containing the password for the Truststore.
   ##
-  passwordsSecretTruststoreKey: truststore-password
+  passwordsSecretTruststoreKey: jks-cert-password
   ## @param tls.passwordsSecretPemPasswordKey The secret key from the tls.passwordsSecret containing the password for the PEM key inside 'tls.passwordsSecret'.
   ##
   passwordsSecretPemPasswordKey: ""
@@ -2365,6 +2365,15 @@ provisioning:
   ##
   preScript: |
     #!/bin/bash
+    echo "Fix ssl"
+    . /opt/bitnami/scripts/libkafka.sh
+    file_to_multiline_property() {
+      awk 'NR > 1{print line" \\"}{line=$0;}END{print $0" "}' <"${1:?missing file}"
+    }
+    kafka_server_conf_set ssl.keystore.key "$(file_to_multiline_property "/certs/tls.key")"
+    kafka_server_conf_set ssl.keystore.certificate.chain "$(file_to_multiline_property "/certs/tls.crt")"
+    kafka_server_conf_set ssl.truststore.certificates "$(file_to_multiline_property "/certs/ca.crt")"    
+    
     . /opt/bitnami/scripts/libos.sh
   
     while true; do
@@ -2376,14 +2385,7 @@ provisioning:
       sleep 5
     done
     
-    echo "Fix ssl"
-    . /opt/bitnami/scripts/libkafka.sh
-    file_to_multiline_property() {
-      awk 'NR > 1{print line" \\"}{line=$0;}END{print $0" "}' <"${1:?missing file}"
-    }
-    kafka_server_conf_set ssl.keystore.key "$(file_to_multiline_property "/certs/tls.key")"
-    kafka_server_conf_set ssl.keystore.certificate.chain "$(file_to_multiline_property "/certs/tls.crt")"
-    kafka_server_conf_set ssl.truststore.certificates "$(file_to_multiline_property "/certs/ca.crt")"
+
     
     
   ## @param provisioning.postScript Extra bash script to run after topic provisioning. /shared/client.properties is path to properties file with most needed configurations
