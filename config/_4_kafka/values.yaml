@@ -2400,7 +2400,7 @@ provisioning:
       ## 2. A truststore and a keystore in PEM format
       ## If caCert is set, option 1 will be taken, otherwise option 2.
       ##
-      certificatesSecret: "cm-kafka-tls"
+      certificatesSecret: "cm-kafka-jks"
       ## @param provisioning.auth.tls.cert The secret key from the certificatesSecret if 'cert' key different from the default (tls.crt)
       ##
       cert: tls.crt
