@@ -2608,7 +2608,7 @@ provisioning:
               name: kafka-secrets
       image: docker.io/bitnami/kafka:4.0.0-debian-12-r8
       imagePullPolicy: IfNotPresent
-      name: prepare-config-1
+      name: prepare-config-{{- randAlphaNum 4 -}}
       resources:
         limits:
           cpu: 375m
@@ -2657,7 +2657,7 @@ provisioning:
           value: kafka:9092
       image: docker.io/bitnami/kafka:4.0.0-debian-12-r8
       imagePullPolicy: IfNotPresent
-      name: wait-for-available-kafka
+      name: wait-for-available-kafka-{{- randAlphaNum 4 -}}
       resources:
         limits:
           cpu: 375m
