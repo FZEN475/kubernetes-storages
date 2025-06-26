@@ -178,7 +178,7 @@ listeners:
   ## @param listeners.client.sslClientAuth Optional. If SASL_SSL is enabled, configure mTLS TLS authentication type. If SSL protocol is enabled, overrides tls.authType for this listener. Allowed values are 'none', 'requested' and 'required'
   client:
     containerPort: 9092
-    protocol: SSL
+    protocol: SASL_SSL
     name: CLIENT
     sslClientAuth: ""
   ## @param listeners.controller.name Name for the Kafka controller listener
@@ -189,7 +189,7 @@ listeners:
   controller:
     name: CONTROLLER
     containerPort: 9093
-    protocol: SSL
+    protocol: SASL_SSL
     sslClientAuth: ""
   ## @param listeners.interbroker.name Name for the Kafka inter-broker listener
   ## @param listeners.interbroker.containerPort Port for the Kafka inter-broker listener
@@ -197,7 +197,7 @@ listeners:
   ## @param listeners.interbroker.sslClientAuth Optional. If SASL_SSL is enabled, configure mTLS TLS authentication type. If SSL protocol is enabled, overrides tls.authType for this listener. Allowed values are 'none', 'requested' and 'required'
   interbroker:
     containerPort: 9094
-    protocol: SSL
+    protocol: SASL_SSL
     name: INTERNAL
     sslClientAuth: ""
   ## @param listeners.external.containerPort Port for the Kafka external listener
@@ -206,7 +206,7 @@ listeners:
   ## @param listeners.external.sslClientAuth Optional. If SASL_SSL is enabled, configure mTLS TLS authentication type. If SSL protocol is enabled, overrides tls.sslClientAuth for this listener. Allowed values are 'none', 'requested' and 'required'
   external:
     containerPort: 9095
-    protocol: SSL
+    protocol: SASL_SSL
     name: EXTERNAL
     sslClientAuth: ""
   ## @param listeners.extraListeners Array of listener objects to be appended to already existing listeners
@@ -232,10 +232,10 @@ sasl:
   ## @param sasl.enabledMechanisms Comma-separated list of allowed SASL mechanisms when SASL listeners are configured. Allowed types: `PLAIN`, `SCRAM-SHA-256`, `SCRAM-SHA-512`, `OAUTHBEARER`
   ## NOTE: At the moment, Kafka Raft mode does not support SCRAM, that is why only PLAIN is configured.
   ##
-  enabledMechanisms: PLAIN,SCRAM-SHA-256
+  enabledMechanisms: PLAIN
   ## @param sasl.interBrokerMechanism SASL mechanism for inter broker communication.
   ##
-  interBrokerMechanism: SCRAM-SHA-256
+  interBrokerMechanism: PLAIN
   ## @param sasl.controllerMechanism SASL mechanism for controller communications.
   ##
   controllerMechanism: PLAIN
@@ -2241,7 +2241,7 @@ metrics:
 provisioning:
   ## @param provisioning.enabled Enable Kafka provisioning Job
   ##
-  enabled: false
+  enabled: true
   ## @param provisioning.waitForKafka Whether an init container should be created to wait until Kafka is ready before provisioning
   ##
   waitForKafka: true
@@ -2266,7 +2266,10 @@ provisioning:
   ##     max.message.bytes: 64000
   ##     flush.messages: 1
   ##
-  topics: []
+  topics:
+    - name: test-topic
+      partitions: 1
+      replicationFactor: 1
   ## @param provisioning.nodeSelector Node labels for pod assignment
   ## Ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
   ##
@@ -2289,7 +2292,14 @@ provisioning:
   ##      --command-config /shared/client.properties
   ##      --list"
   ##
-  extraProvisioningCommands: []
+  extraProvisioningCommands:
+    - /opt/bitnami/kafka/bin/kafka-acls.sh
+      --bootstrap-server $KAFKA_SERVICE
+      --add
+      --allow-principal User:test
+      --operation All
+      --topic test-topic
+      --command-config /shared/client.properties
   ## @param provisioning.parallel Number of provisioning commands to run at the same time
   ##
   parallel: 1
@@ -2308,7 +2318,7 @@ provisioning:
       ## @param provisioning.auth.tls.type Format to use for TLS certificates. Allowed types: `JKS` and `PEM`.
       ## Note: ignored if auth.tls.client.protocol different from one of these values: "SSL" "SASL_SSL"
       ##
-      type: jks
+      type: PEM
       ## @param provisioning.auth.tls.certificatesSecret Existing secret containing the TLS certificates for the Kafka provisioning Job.
       ## When using 'jks' format for certificates, the secret should contain a truststore and a keystore.
       ## When using 'pem' format for certificates, the secret should contain one of the following:
@@ -2316,7 +2326,7 @@ provisioning:
       ## 2. A truststore and a keystore in PEM format
       ## If caCert is set, option 1 will be taken, otherwise option 2.
       ##
-      certificatesSecret: ""
+      certificatesSecret: "cm-kafka-tls"
       ## @param provisioning.auth.tls.cert The secret key from the certificatesSecret if 'cert' key different from the default (tls.crt)
       ##
       cert: tls.crt
