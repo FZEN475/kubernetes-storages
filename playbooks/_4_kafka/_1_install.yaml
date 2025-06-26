@@ -16,8 +16,8 @@
 
 - name: Remove cm-kafka-jks
   kubernetes.core.k8s:
-    state: present
-    wait: true
+    state: absent
+    wait: false
     definition:
       kind: Certificate
       apiVersion: cert-manager.io/v1
@@ -28,7 +28,7 @@
 - name: Create cm-kafka-jks
   kubernetes.core.k8s:
     state: present
-    wait: true
+    wait: false
     definition:
       kind: Certificate
       apiVersion: cert-manager.io/v1
