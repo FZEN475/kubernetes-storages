@@ -2365,15 +2365,7 @@ provisioning:
   ##
   preScript: |
     #!/bin/bash
-    echo "Fix ssl"
-    . /opt/bitnami/scripts/libkafka.sh
-    file_to_multiline_property() {
-      awk 'NR > 1{print line" \\"}{line=$0;}END{print $0" "}' <"${1:?missing file}"
-    }
-    kafka_server_conf_set ssl.keystore.key "$(file_to_multiline_property "/certs/tls.key")"
-    kafka_server_conf_set ssl.keystore.certificate.chain "$(file_to_multiline_property "/certs/tls.crt")"
-    kafka_server_conf_set ssl.truststore.certificates "$(file_to_multiline_property "/certs/ca.crt")"    
-    
+
     . /opt/bitnami/scripts/libos.sh
   
     while true; do
@@ -2400,7 +2392,7 @@ provisioning:
       ## @param provisioning.auth.tls.type Format to use for TLS certificates. Allowed types: `JKS` and `PEM`.
       ## Note: ignored if auth.tls.client.protocol different from one of these values: "SSL" "SASL_SSL"
       ##
-      type: PEM
+      type: JKS
       ## @param provisioning.auth.tls.certificatesSecret Existing secret containing the TLS certificates for the Kafka provisioning Job.
       ## When using 'jks' format for certificates, the secret should contain a truststore and a keystore.
       ## When using 'pem' format for certificates, the secret should contain one of the following:
@@ -2427,15 +2419,15 @@ provisioning:
       ## @param provisioning.auth.tls.passwordsSecret Name of the secret containing passwords to access the JKS files or PEM key when they are password-protected.
       ## It should contain two keys called "keystore-password" and "truststore-password", or "key-password" if using a password-protected PEM key.
       ##
-      passwordsSecret: ""
+      passwordsSecret: "kafka-secrets"
       ## @param provisioning.auth.tls.keyPasswordSecretKey The secret key from the passwordsSecret if 'keyPasswordSecretKey' key different from the default (key-password)
       ## Note: must not be used if `passwordsSecret` is not defined.
       ##
-      keyPasswordSecretKey: ""
+      keyPasswordSecretKey: "jks-cert-password"
       ## @param provisioning.auth.tls.keystorePasswordSecretKey The secret key from the passwordsSecret if 'keystorePasswordSecretKey' key different from the default (keystore-password)
       ## Note: must not be used if `passwordsSecret` is not defined.
       ##
-      keystorePasswordSecretKey: ""
+      keystorePasswordSecretKey: "jks-cert-password"
       ## @param provisioning.auth.tls.truststorePasswordSecretKey The secret key from the passwordsSecret if 'truststorePasswordSecretKey' key different from the default (truststore-password)
       ## Note: must not be used if `passwordsSecret` is not defined.
       ##
