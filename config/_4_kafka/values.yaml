@@ -2244,7 +2244,7 @@ provisioning:
   enabled: true
   ## @param provisioning.waitForKafka Whether an init container should be created to wait until Kafka is ready before provisioning
   ##
-  waitForKafka: true
+  waitForKafka: false
   ## @param provisioning.useHelmHooks Flag to indicate usage of helm hooks
   ##
   useHelmHooks: true
@@ -2636,3 +2636,49 @@ provisioning:
         - name: kafka-client-certs
           mountPath: /certs
           readOnly: true
+    - args:
+      - -ec
+      - |
+        . /opt/bitnami/scripts/libos.sh
+        
+        exit_code=0
+        if ! retry_while "/opt/bitnami/kafka/bin/kafka-broker-api-versions.sh --bootstrap-server ${KAFKA_SERVICE} --command-config /shared/client.properties"; then
+            echo "Kafka is not ready"
+            exit_code=1
+        else
+            echo "Kafka ready"
+        fi
+        
+        exit "$exit_code"
+      command:
+        - /bin/bash
+      env:
+        - name: KAFKA_SERVICE
+          value: kafka:9092
+      image: docker.io/bitnami/kafka:4.0.0-debian-12-r8
+      imagePullPolicy: IfNotPresent
+      name: wait-for-available-kafka
+      resources:
+        limits:
+          cpu: 375m
+          ephemeral-storage: 2Gi
+          memory: 384Mi
+        requests:
+          cpu: 250m
+          ephemeral-storage: 50Mi
+          memory: 256Mi
+      securityContext:
+        allowPrivilegeEscalation: false
+        capabilities:
+          drop:
+            - ALL
+        readOnlyRootFilesystem: true
+        runAsGroup: 1001
+        runAsNonRoot: true
+        runAsUser: 1001
+        seLinuxOptions: {}
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+        - mountPath: /shared
+          name: shared
