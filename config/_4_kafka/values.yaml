@@ -178,7 +178,7 @@ listeners:
   ## @param listeners.client.sslClientAuth Optional. If SASL_SSL is enabled, configure mTLS TLS authentication type. If SSL protocol is enabled, overrides tls.authType for this listener. Allowed values are 'none', 'requested' and 'required'
   client:
     containerPort: 9092
-    protocol: SASL_SSL
+    protocol: SSL
     name: CLIENT
     sslClientAuth: ""
   ## @param listeners.controller.name Name for the Kafka controller listener
@@ -189,7 +189,7 @@ listeners:
   controller:
     name: CONTROLLER
     containerPort: 9093
-    protocol: SASL_SSL
+    protocol: SSL
     sslClientAuth: ""
   ## @param listeners.interbroker.name Name for the Kafka inter-broker listener
   ## @param listeners.interbroker.containerPort Port for the Kafka inter-broker listener
@@ -197,7 +197,7 @@ listeners:
   ## @param listeners.interbroker.sslClientAuth Optional. If SASL_SSL is enabled, configure mTLS TLS authentication type. If SSL protocol is enabled, overrides tls.authType for this listener. Allowed values are 'none', 'requested' and 'required'
   interbroker:
     containerPort: 9094
-    protocol: SASL_SSL
+    protocol: SSL
     name: INTERNAL
     sslClientAuth: ""
   ## @param listeners.external.containerPort Port for the Kafka external listener
@@ -206,7 +206,7 @@ listeners:
   ## @param listeners.external.sslClientAuth Optional. If SASL_SSL is enabled, configure mTLS TLS authentication type. If SSL protocol is enabled, overrides tls.sslClientAuth for this listener. Allowed values are 'none', 'requested' and 'required'
   external:
     containerPort: 9095
-    protocol: SASL_SSL
+    protocol: SSL
     name: EXTERNAL
     sslClientAuth: ""
   ## @param listeners.extraListeners Array of listener objects to be appended to already existing listeners
@@ -372,7 +372,7 @@ tls:
   ## @param tls.jksKeystoreKey The secret key from the `tls.existingSecret` containing the keystore
   ## Note: ignored when using 'pem' format for certificates.
   ##
-  jksKeystoreKey: ""
+  jksKeystoreKey: "keystore.jks"
   ## @param tls.jksTruststoreSecret Name of the existing secret containing your truststore if truststore not existing or different from the one in the `tls.existingSecret`
   ## Note: ignored when using 'pem' format for certificates.
   ##
@@ -380,7 +380,7 @@ tls:
   ## @param tls.jksTruststoreKey The secret key from the `tls.existingSecret` or `tls.jksTruststoreSecret` containing the truststore
   ## Note: ignored when using 'pem' format for certificates.
   ##
-  jksTruststoreKey: ""
+  jksTruststoreKey: "truststore.jks"
   ## @param tls.endpointIdentificationAlgorithm The endpoint identification algorithm to validate server hostname using server certificate
   ## Disable server host name verification by setting it to an empty string.
   ## ref: https://docs.confluent.io/current/kafka/authentication_ssl.html#optional-settings
@@ -2431,7 +2431,7 @@ provisioning:
       ## @param provisioning.auth.tls.truststorePasswordSecretKey The secret key from the passwordsSecret if 'truststorePasswordSecretKey' key different from the default (truststore-password)
       ## Note: must not be used if `passwordsSecret` is not defined.
       ##
-      truststorePasswordSecretKey: ""
+      truststorePasswordSecretKey: "jks-cert-password"
       ## @param provisioning.auth.tls.keyPassword Password to access the password-protected PEM key if necessary. Ignored if 'passwordsSecret' is provided.
       ##
       keyPassword: ""
