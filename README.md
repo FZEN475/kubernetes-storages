@@ -34,7 +34,7 @@
 
   ```yaml
   secrets:
-    - id_ed25519
+    - id_ed25519 
   ```
 </details>
 
