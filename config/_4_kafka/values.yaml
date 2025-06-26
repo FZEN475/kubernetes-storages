@@ -669,7 +669,7 @@ defaultInitContainers:
 controller:
   ## @param controller.replicaCount Number of Kafka controller-eligible nodes
   ##
-  replicaCount: 3
+  replicaCount: 1
   ## @param controller.controllerOnly If set to true, controller nodes will be deployed as dedicated controllers, instead of controller+broker processes.
   ##
   controllerOnly: false
@@ -801,13 +801,13 @@ controller:
   ##     cpu: 3
   ##     memory: 1024Mi
   ##
-  resources:
-    requests:
-      cpu: 500m
-      memory: 512Mi
-    limits:
-      cpu: 1
-      memory: 1024Mi
+#  resources:
+#    requests:
+#      cpu: 500m
+#      memory: 512Mi
+#    limits:
+#      cpu: 1
+#      memory: 1024Mi
   ## Kafka pods' Security Context
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod
   ## @param controller.podSecurityContext.enabled Enable security context for the pods
