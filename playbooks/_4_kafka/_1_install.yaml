@@ -63,7 +63,7 @@
         renewBefore: 360h0m0s
         secretName: cm-kafka-jks
         additionalOutputFormats:
-          - type: CombinedPEM` <--- experimented with this without any luck as well.
+          - type: CombinedPEM
 
 - name: Remove kafka
   kubernetes.core.helm:
