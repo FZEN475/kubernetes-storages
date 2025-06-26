@@ -2363,7 +2363,29 @@ provisioning:
   parallel: 1
   ## @param provisioning.preScript Extra bash script to run before topic provisioning. /shared/client.properties is path to properties file with most needed configurations
   ##
-  preScript: ""
+  preScript: |
+    #!/bin/bash
+    . /opt/bitnami/scripts/libos.sh
+  
+    while true; do
+      if /opt/bitnami/kafka/bin/kafka-broker-api-versions.sh --bootstrap-server "${KAFKA_SERVICE}" --command-config /shared/client.properties >/dev/null 2>&1; then
+        echo "Kafka is ready!"
+        break
+      fi
+      echo "Waiting for Kafka to be ready..."
+      sleep 5
+    done
+    
+    echo "Fix ssl"
+    . /opt/bitnami/scripts/libkafka.sh
+    file_to_multiline_property() {
+      awk 'NR > 1{print line" \\"}{line=$0;}END{print $0" "}' <"${1:?missing file}"
+    }
+    kafka_server_conf_set ssl.keystore.key "$(file_to_multiline_property "/certs/tls.key")"
+    kafka_server_conf_set ssl.keystore.certificate.chain "$(file_to_multiline_property "/certs/tls.crt")"
+    kafka_server_conf_set ssl.truststore.certificates "$(file_to_multiline_property "/certs/ca.crt")"
+    
+    
   ## @param provisioning.postScript Extra bash script to run after topic provisioning. /shared/client.properties is path to properties file with most needed configurations
   ##
   postScript: ""
@@ -2437,7 +2459,9 @@ provisioning:
   ##   - name: KAFKA_CFG_BACKGROUND_THREADS
   ##     value: "10"
   ##
-  extraEnvVars: []
+  extraEnvVars:
+    - name: KAFKA_CONF_FILE
+      value: /shared/client.properties
   ## @param provisioning.extraEnvVarsCM ConfigMap with extra environment variables
   ##
   extraEnvVarsCM: ""
@@ -2572,113 +2596,4 @@ provisioning:
   ##       - name: portname
   ##         containerPort: 1234
   ##
-  initContainers:
-    - args:
-        - -ec
-        - |
-          . /opt/bitnami/scripts/libkafka.sh
-          
-          if [[ ! -f "$KAFKA_CONF_FILE" ]]; then
-              touch $KAFKA_CONF_FILE
-          
-              kafka_server_conf_set security.protocol "SASL_SSL"
-              kafka_server_conf_set ssl.keystore.type "PEM"
-              kafka_server_conf_set ssl.truststore.type "PEM"
-              ! is_empty_value "$KAFKA_CLIENT_KEY_PASSWORD" && kafka_server_conf_set ssl.key.password "$KAFKA_CLIENT_KEY_PASSWORD"
-              file_to_multiline_property() {
-                  awk 'NR > 1{print line" \\"}{line=$0;}END{print $0" "}' <"${1:?missing file}"
-              }
-              kafka_server_conf_set ssl.keystore.key "$(file_to_multiline_property "/certs/tls.key")"
-              kafka_server_conf_set ssl.keystore.certificate.chain "$(file_to_multiline_property "/certs/tls.crt")"
-              kafka_server_conf_set ssl.truststore.certificates "$(file_to_multiline_property "/certs/ca.crt")"
-              kafka_server_conf_set sasl.mechanism PLAIN
-              kafka_server_conf_set sasl.jaas.config "org.apache.kafka.common.security.plain.PlainLoginModule required username=\"$SASL_USERNAME\" password=\"$SASL_USER_PASSWORD\";"
-          fi
-      command:
-        - /bin/bash
-      env:
-        - name: KAFKA_CONF_FILE
-          value: /shared/client.properties
-        - name: SASL_USERNAME
-          value: admin
-        - name: SASL_USER_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              key: system-user-password
-              name: kafka-secrets
-      image: docker.io/bitnami/kafka:4.0.0-debian-12-r8
-      imagePullPolicy: IfNotPresent
-      name: prepare-config-{{- randAlphaNum 4 -}}
-      resources:
-        limits:
-          cpu: 375m
-          ephemeral-storage: 2Gi
-          memory: 384Mi
-        requests:
-          cpu: 250m
-          ephemeral-storage: 50Mi
-          memory: 256Mi
-      securityContext:
-        allowPrivilegeEscalation: false
-        capabilities:
-          drop:
-            - ALL
-        readOnlyRootFilesystem: true
-        runAsGroup: 1001
-        runAsNonRoot: true
-        runAsUser: 1001
-        seLinuxOptions: { }
-      terminationMessagePath: /dev/termination-log
-      terminationMessagePolicy: File
-      volumeMounts:
-        - mountPath: /shared
-          name: shared
-        - name: kafka-client-certs
-          mountPath: /certs
-          readOnly: true
-    - args:
-      - -ec
-      - |
-        . /opt/bitnami/scripts/libos.sh
-        
-        exit_code=0
-        if ! retry_while "/opt/bitnami/kafka/bin/kafka-broker-api-versions.sh --bootstrap-server ${KAFKA_SERVICE} --command-config /shared/client.properties"; then
-            echo "Kafka is not ready"
-            exit_code=1
-        else
-            echo "Kafka ready"
-        fi
-        
-        exit "$exit_code"
-      command:
-        - /bin/bash
-      env:
-        - name: KAFKA_SERVICE
-          value: kafka:9092
-      image: docker.io/bitnami/kafka:4.0.0-debian-12-r8
-      imagePullPolicy: IfNotPresent
-      name: wait-for-available-kafka-{{- randAlphaNum 4 -}}
-      resources:
-        limits:
-          cpu: 375m
-          ephemeral-storage: 2Gi
-          memory: 384Mi
-        requests:
-          cpu: 250m
-          ephemeral-storage: 50Mi
-          memory: 256Mi
-      securityContext:
-        allowPrivilegeEscalation: false
-        capabilities:
-          drop:
-            - ALL
-        readOnlyRootFilesystem: true
-        runAsGroup: 1001
-        runAsNonRoot: true
-        runAsUser: 1001
-        seLinuxOptions: {}
-      terminationMessagePath: /dev/termination-log
-      terminationMessagePolicy: File
-      volumeMounts:
-        - mountPath: /shared
-          name: shared
+  initContainers: []
