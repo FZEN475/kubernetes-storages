@@ -14,56 +14,55 @@
     dest: '/tmp/values_kafka.yaml'
     mode: "0640"
 
-#- name: Remove cm-kafka-jks
-#  kubernetes.core.k8s:
-#    state: absent
-#    wait: false
-#    definition:
-#      kind: Certificate
-#      apiVersion: cert-manager.io/v1
-#      metadata:
-#        name: cm-kafka-jks
-#        namespace: storage
-#
-#- name: Create cm-kafka-jks
-#  kubernetes.core.k8s:
-#    state: present
-#    wait: false
-#    definition:
-#      kind: Certificate
-#      apiVersion: cert-manager.io/v1
-#      metadata:
-#        name: cm-kafka-jks
-#        namespace: storage
-#      spec:
-#        commonName: "kafka.storage.svc"
-#        privateKey:
-#          rotationPolicy: Always
-#          algorithm: RSA
-#          encoding: PKCS1
-#          size: 2048
-#        usages:
-#          - server auth
-#          - client auth
-#        dnsNames:
-#          - "kafka-controller-headless.storage.svc"
-#          - "*.kafka-controller-headless.storage.svc.fzen.pro"
-#          - "*.kafka-controller-headless.storage.svc.cluster.local"
-#        duration: 2160h0m0s
-#        issuerRef:
-#          group: cert-manager.io
-#          kind: ClusterIssuer
-#          name: root-intermediate0-ci
-#        keystores:
-#          jks:
-#            create: true
-#            passwordSecretRef:
-#              key: jks-cert-password
-#              name: kafka-secrets
-#        renewBefore: 360h0m0s
-#        secretName: cm-kafka-jks
-#        additionalOutputFormats:
-#          - type: CombinedPEM
+- name: Remove cm-kafka-jks
+  kubernetes.core.k8s:
+    state: absent
+    wait: false
+    definition:
+      kind: Certificate
+      apiVersion: cert-manager.io/v1
+      metadata:
+        name: cm-kafka-jks
+        namespace: storage
+
+- name: Create cm-kafka-jks
+  kubernetes.core.k8s:
+    state: present
+    wait: false
+    definition:
+      kind: Certificate
+      apiVersion: cert-manager.io/v1
+      metadata:
+        name: cm-kafka-jks
+        namespace: storage
+      spec:
+        commonName: "kafka.storage.svc"
+        privateKey:
+          rotationPolicy: Always
+          algorithm: RSA
+          encoding: PKCS1
+          size: 2048
+        usages:
+          - server auth
+          - client auth
+        dnsNames:
+          - "kafka-controller-headless.storage.svc"
+          - "*.kafka-controller-headless.storage.svc"
+        duration: 2160h0m0s
+        issuerRef:
+          group: cert-manager.io
+          kind: ClusterIssuer
+          name: root-intermediate0-ci
+        keystores:
+          jks:
+            create: true
+            passwordSecretRef:
+              key: jks-cert-password
+              name: kafka-secrets
+        renewBefore: 360h0m0s
+        secretName: cm-kafka-jks
+        additionalOutputFormats:
+          - type: CombinedPEM
 
 - name: Remove kafka
   kubernetes.core.helm:
