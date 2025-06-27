@@ -48,15 +48,13 @@
         dnsNames:
           - "kafka"
           - "kafka.storage.svc"
+          - "kafka.storage.svc.cluster.local"
+          - "kafka.storage.svc.fzen.pro"
           - "kafka-controller-headless.storage.svc"
-          - "kafka-controller-0.kafka-controller-headless.storage.svc"
-          - "kafka-controller-1.kafka-controller-headless.storage.svc"
-          - "kafka-controller-2.kafka-controller-headless.storage.svc"
           - "*.kafka-controller-headless.storage.svc"
+          - "kafka-controller-headless.storage.svc.cluster.local"
+          - "*.kafka-controller-headless.storage.svc.cluster.local"
           - "kafka-controller-headless.storage.svc.fzen.pro"
-          - "kafka-controller-0.kafka-controller-headless.storage.svc.fzen.pro"   
-          - "kafka-controller-1.kafka-controller-headless.storage.svc.fzen.pro"
-          - "kafka-controller-2.kafka-controller-headless.storage.svc.fzen.pro"
           - "*.kafka-controller-headless.storage.svc.fzen.pro"
         duration: 2160h0m0s
         issuerRef:
