@@ -447,7 +447,7 @@ initContainers: []
 ## DNS policies can be set on a per-Pod basis. Currently Kubernetes supports the following Pod-specific DNS policies.
 ## Available options: Default, ClusterFirst, ClusterFirstWithHostNet, None
 ## Ref: https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/#pod-s-dns-policy
-dnsPolicy: ""
+dnsPolicy: "ClusterFirst"
 ## @param dnsConfig  allows users more control on the DNS settings for a Pod. Required if `dnsPolicy` is set to `None`
 ## The dnsConfig field is optional and it can work with any dnsPolicy settings.
 ## Ref: https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/#pod-dns-config
