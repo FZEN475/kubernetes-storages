@@ -46,6 +46,7 @@
           - server auth
           - client auth
         dnsNames:
+          - "kafka.storage.svc"
           - "kafka-controller-headless.storage.svc"
           - "kafka-controller-0.kafka-controller-headless.storage.svc"
           - "kafka-controller-1.kafka-controller-headless.storage.svc"
