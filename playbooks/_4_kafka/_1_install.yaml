@@ -47,6 +47,9 @@
           - client auth
         dnsNames:
           - "kafka-controller-headless.storage.svc"
+          - "kafka-controller-0.kafka-controller-headless.storage.svc"
+          - "kafka-controller-1.kafka-controller-headless.storage.svc"
+          - "kafka-controller-2.kafka-controller-headless.storage.svc"
           - "*.kafka-controller-headless.storage.svc"
         duration: 2160h0m0s
         issuerRef:
