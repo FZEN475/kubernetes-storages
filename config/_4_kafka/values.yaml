@@ -223,7 +223,7 @@ listeners:
   ## @param listeners.advertisedListeners Overrides the Kafka 'advertised.listener' configuration setting.
   ## @param listeners.securityProtocolMap Overrides the Kafka 'security.protocol.map' configuration setting.
   overrideListeners: ""
-  advertisedListeners: "CLIENT://kafka.storage.svc:9092,INTERNAL://kafka.storage.svc:9094"
+#  advertisedListeners: "CLIENT://kafka.storage.svc:9092,INTERNAL://kafka.storage.svc:9094"
   securityProtocolMap: ""
 ## @section Kafka SASL parameters
 ## Kafka SASL settings for authentication, required if SASL_PLAINTEXT or SASL_SSL listeners are configured
@@ -462,13 +462,13 @@ dnsPolicy: ""
 ##     - name: ndots
 ##       value: "2"
 ##     - name: edns0
-dnsConfig:
-  searches:
-    - "storage.svc"  # Будет подставляться, если имя не резолвится
-    - "storage.svc.cluster.local"  # Оставляем стандартные суффиксы Kubernetes
-  options:
-    - name: ndots
-      value: "2"
+dnsConfig: {}
+#  searches:
+#    - "storage.svc"  # Будет подставляться, если имя не резолвится
+#    - "storage.svc.cluster.local"  # Оставляем стандартные суффиксы Kubernetes
+#  options:
+#    - name: ndots
+#      value: "2"
 
 ## Default init Containers
 ##
@@ -681,7 +681,7 @@ controller:
   controllerOnly: false
   ## @param controller.quorumBootstrapServers Override the Kafka controller quorum bootstrap servers of the Kafka Kraft cluster. If not set, it will be automatically configured to use all controller-eligible nodes.
   ##
-  quorumBootstrapServers: "kafka-controller-0.kafka-controller-headless.storage.svc:9093, kafka-controller-1.kafka-controller-headless.storage.svc:9093, kafka-controller-2.kafka-controller-headless.storage.svc:9093"
+#  quorumBootstrapServers: "kafka-controller-0.kafka-controller-headless.storage.svc:9093, kafka-controller-1.kafka-controller-headless.storage.svc:9093, kafka-controller-2.kafka-controller-headless.storage.svc:9093"
   ## @param controller.minId Minimal node.id values for controller-eligible nodes. Do not change after first initialization.
   ## Broker-only id increment their ID starting at this minimal value.
   ## We recommend setting this this value high enough, as IDs under this value will be used by controller-elegible nodes
