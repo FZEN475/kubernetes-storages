@@ -52,7 +52,7 @@ fullnameOverride: ""
 namespaceOverride: ""
 ## @param clusterDomain Default Kubernetes cluster domain
 ##
-clusterDomain: cluster.local
+clusterDomain: fzen.pro
 ## @param commonLabels Labels to add to all deployed objects
 ##
 commonLabels: {}
