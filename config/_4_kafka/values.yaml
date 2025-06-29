@@ -701,7 +701,7 @@ controller:
   ## @param controller.overrideConfiguration Kafka configuration override for Kafka controller-eligible nodes. Values defined here takes precedence over the ones defined at `controller.config`
   ##
   overrideConfiguration:
-    super.users: User:admin
+    super.users: User:admin;User:controller_user;User:inter_broker_user
 #    authorizer.class.name: org.apache.kafka.metadata.authorizer.StandardAuthorizer
     
 #    allow.everyone.if.no.acl.found: true
@@ -2305,71 +2305,75 @@ provisioning:
   ##      --command-config /shared/client.properties
   ##      --list"
   ##
-#  extraProvisioningCommands:
-#    # ===== ПРАВА ДЛЯ АДМИНИСТРАТОРА (admin) =====
-#    # Полные права на кластер
-#    - /opt/bitnami/kafka/bin/kafka-acls.sh
-#      --bootstrap-server $KAFKA_SERVICE
-#      --add
-#      --allow-principal User:admin
-#      --operation All
-#      --cluster
-#      --command-config /shared/client.properties
-#
-#    # Полные права на все топики
-#    - /opt/bitnami/kafka/bin/kafka-acls.sh
-#      --bootstrap-server $KAFKA_SERVICE
-#      --add
-#      --allow-principal User:admin
-#      --operation All
-#      --topic '*'
-#      --command-config /shared/client.properties
-#
-#    # Полные права на все группы
-#    - /opt/bitnami/kafka/bin/kafka-acls.sh
-#      --bootstrap-server $KAFKA_SERVICE
-#      --add
-#      --allow-principal User:admin
-#      --operation All
-#      --group '*'
-#      --command-config /shared/client.properties
-#
-#    # Полные права на transactional-id
-#    - /opt/bitnami/kafka/bin/kafka-acls.sh
-#      --bootstrap-server $KAFKA_SERVICE
-#      --add
-#      --allow-principal User:admin
-#      --operation All
-#      --transactional-id '*'
-#      --command-config /shared/client.properties
-#
-#    # ===== ПРАВА ДЛЯ ПОЛЬЗОВАТЕЛЯ telebot-gpt =====
-#    # Права на запись во все топики
-#    - /opt/bitnami/kafka/bin/kafka-acls.sh
-#      --bootstrap-server $KAFKA_SERVICE
-#      --add
-#      --allow-principal User:telebot-gpt
-#      --operation Write
-#      --topic '*'
-#      --command-config /shared/client.properties
-#
-#    # Права на чтение всех топиков
-#    - /opt/bitnami/kafka/bin/kafka-acls.sh
-#      --bootstrap-server $KAFKA_SERVICE
-#      --add
-#      --allow-principal User:telebot-gpt
-#      --operation Read
-#      --topic '*'
-#      --command-config /shared/client.properties
-#
-#    # Права на доступ к consumer-группам
-#    - /opt/bitnami/kafka/bin/kafka-acls.sh
-#      --bootstrap-server $KAFKA_SERVICE
-#      --add
-#      --allow-principal User:telebot-gpt
-#      --operation Read
-#      --group '*'
-#      --command-config /shared/client.properties
+  extraProvisioningCommands:
+    - /opt/bitnami/kafka/bin/kafka-acls.sh \
+      --bootstrap-server $KAFKA_SERVICE \
+      --list \
+      --command-config /shared/client.properties
+    # ===== ПРАВА ДЛЯ АДМИНИСТРАТОРА (admin) =====
+    # Полные права на кластер
+    - /opt/bitnami/kafka/bin/kafka-acls.sh
+      --bootstrap-server $KAFKA_SERVICE
+      --add
+      --allow-principal User:admin
+      --operation All
+      --cluster
+      --command-config /shared/client.properties
+
+    # Полные права на все топики
+    - /opt/bitnami/kafka/bin/kafka-acls.sh
+      --bootstrap-server $KAFKA_SERVICE
+      --add
+      --allow-principal User:admin
+      --operation All
+      --topic '*'
+      --command-config /shared/client.properties
+
+    # Полные права на все группы
+    - /opt/bitnami/kafka/bin/kafka-acls.sh
+      --bootstrap-server $KAFKA_SERVICE
+      --add
+      --allow-principal User:admin
+      --operation All
+      --group '*'
+      --command-config /shared/client.properties
+
+    # Полные права на transactional-id
+    - /opt/bitnami/kafka/bin/kafka-acls.sh
+      --bootstrap-server $KAFKA_SERVICE
+      --add
+      --allow-principal User:admin
+      --operation All
+      --transactional-id '*'
+      --command-config /shared/client.properties
+
+    # ===== ПРАВА ДЛЯ ПОЛЬЗОВАТЕЛЯ telebot-gpt =====
+    # Права на запись во все топики
+    - /opt/bitnami/kafka/bin/kafka-acls.sh
+      --bootstrap-server $KAFKA_SERVICE
+      --add
+      --allow-principal User:telebot-gpt
+      --operation Write
+      --topic '*'
+      --command-config /shared/client.properties
+
+    # Права на чтение всех топиков
+    - /opt/bitnami/kafka/bin/kafka-acls.sh
+      --bootstrap-server $KAFKA_SERVICE
+      --add
+      --allow-principal User:telebot-gpt
+      --operation Read
+      --topic '*'
+      --command-config /shared/client.properties
+
+    # Права на доступ к consumer-группам
+    - /opt/bitnami/kafka/bin/kafka-acls.sh
+      --bootstrap-server $KAFKA_SERVICE
+      --add
+      --allow-principal User:telebot-gpt
+      --operation Read
+      --group '*'
+      --command-config /shared/client.properties
 
   ## @param provisioning.parallel Number of provisioning commands to run at the same time
   ##
