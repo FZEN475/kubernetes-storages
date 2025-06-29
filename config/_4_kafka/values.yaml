@@ -2592,8 +2592,8 @@ provisioning:
   ##         containerPort: 1234
   ##
   initContainers:
-    - name: wait-for-available-kafka
-      image: docker.io/bitnami/kafka:4.0.0-debian-12-r8
+    #- name: wait-for-available-kafka
+    - image: docker.io/bitnami/kafka:4.0.0-debian-12-r8
       imagePullPolicy: IfNotPresent
       resources:
         limits:
