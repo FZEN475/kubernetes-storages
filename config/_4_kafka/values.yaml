@@ -2517,8 +2517,8 @@ provisioning:
     sysctls: []
     supplementalGroups: []
     fsGroup: 1001
-    seccompProfile:
-      type: "RuntimeDefault"
+#    seccompProfile:
+#      type: "RuntimeDefault"
   ## Kafka provisioning containers' Security Context
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-container
   ## @param provisioning.containerSecurityContext.enabled Enable Kafka provisioning containers' Security Context
