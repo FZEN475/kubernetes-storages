@@ -2312,33 +2312,33 @@ provisioning:
       --bootstrap-server $KAFKA_SERVICE \
       --list \
       --command-config /shared/client.properties
-    # ===== ПРАВА ДЛЯ АДМИНИСТРАТОРА (admin) =====
-    # Полные права на кластер
-    - /opt/bitnami/kafka/bin/kafka-acls.sh
-      --bootstrap-server $KAFKA_SERVICE
-      --add
-      --allow-principal User:admin
-      --operation All
-      --cluster
-      --command-config /shared/client.properties
-
-    # Полные права на все топики
-    - /opt/bitnami/kafka/bin/kafka-acls.sh
-      --bootstrap-server $KAFKA_SERVICE
-      --add
-      --allow-principal User:admin
-      --operation All
-      --topic '*'
-      --command-config /shared/client.properties
-
-    # Полные права на все группы
-    - /opt/bitnami/kafka/bin/kafka-acls.sh
-      --bootstrap-server $KAFKA_SERVICE
-      --add
-      --allow-principal User:admin
-      --operation All
-      --group '*'
-      --command-config /shared/client.properties
+#    # ===== ПРАВА ДЛЯ АДМИНИСТРАТОРА (admin) =====
+#    # Полные права на кластер
+#    - /opt/bitnami/kafka/bin/kafka-acls.sh
+#      --bootstrap-server $KAFKA_SERVICE
+#      --add
+#      --allow-principal User:admin
+#      --operation All
+#      --cluster
+#      --command-config /shared/client.properties
+#
+#    # Полные права на все топики
+#    - /opt/bitnami/kafka/bin/kafka-acls.sh
+#      --bootstrap-server $KAFKA_SERVICE
+#      --add
+#      --allow-principal User:admin
+#      --operation All
+#      --topic '*'
+#      --command-config /shared/client.properties
+#
+#    # Полные права на все группы
+#    - /opt/bitnami/kafka/bin/kafka-acls.sh
+#      --bootstrap-server $KAFKA_SERVICE
+#      --add
+#      --allow-principal User:admin
+#      --operation All
+#      --group '*'
+#      --command-config /shared/client.properties
 
     # Полные права на transactional-id
     - /opt/bitnami/kafka/bin/kafka-acls.sh
@@ -2391,14 +2391,7 @@ provisioning:
       echo "Waiting for Kafka to be ready..."
       sleep 5
     done
-    while true; do
-      if /opt/bitnami/kafka/bin/kafka-broker-api-versions.sh --bootstrap-server "kafka1:9092" --command-config /shared/client.propertie1 >/dev/null 2>&1; then
-        echo "MY ERROR"
-        break
-      fi
-      echo "MY ERROR"
-      sleep 5
-    done
+
   ## @param provisioning.postScript Extra bash script to run after topic provisioning. /shared/client.properties is path to properties file with most needed configurations
   ##
   postScript: ""
