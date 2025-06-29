@@ -1088,7 +1088,7 @@ controller:
   persistence:
     ## @param controller.persistence.enabled Enable Kafka data persistence using PVC
     ##
-    enabled: true
+    enabled: false
     ## @param controller.persistence.existingClaim A manually managed Persistent Volume and Claim
     ## If defined, PVC must be created manually before volume will be bound
     ## The value is evaluated as a template
