@@ -732,7 +732,9 @@ controller:
   ##   - name: KAFKA_CFG_BACKGROUND_THREADS
   ##     value: "10"
   ##
-  extraEnvVars: []
+  extraEnvVars:
+    - name: KAFKA_SUPER_USERS
+      value: "User:admin;User:controller_user;User:inter_broker_user"
   ## @param controller.extraEnvVarsCM ConfigMap with extra environment variables
   ##
   extraEnvVarsCM: ""
@@ -2394,7 +2396,7 @@ provisioning:
         echo "MY ERROR"
         break
       fi
-      echo "Waiting for Kafka to be ready..."
+      echo "MY ERROR"
       sleep 5
     done
   ## @param provisioning.postScript Extra bash script to run after topic provisioning. /shared/client.properties is path to properties file with most needed configurations
