@@ -702,7 +702,7 @@ controller:
   ##
   overrideConfiguration:
     super.users: User:admin;User:controller_user;User:inter_broker_user
-#    authorizer.class.name: org.apache.kafka.metadata.authorizer.StandardAuthorizer
+    authorizer.class.name: org.apache.kafka.metadata.authorizer.StandardAuthorizer
     
 #    allow.everyone.if.no.acl.found: true
   ## @param controller.existingConfigmap Name of an existing ConfigMap with the Kafka configuration for Kafka controller-eligible nodes
