@@ -2512,7 +2512,7 @@ provisioning:
   ## @param provisioning.podSecurityContext.seccompProfile.type Set Kafka provisioning pod's Security Context seccomp profile
   ##
   podSecurityContext:
-    enabled: false
+    enabled: true
     fsGroupChangePolicy: Always
     sysctls: []
     supplementalGroups: []
@@ -2537,7 +2537,7 @@ provisioning:
   ##     readOnlyRootFilesystem: true
   ##
   containerSecurityContext:
-    enabled: false
+    enabled: true
     seLinuxOptions: {}
     runAsUser: 1001
     runAsGroup: 1001
