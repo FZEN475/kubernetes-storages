@@ -675,7 +675,7 @@ defaultInitContainers:
 controller:
   ## @param controller.replicaCount Number of Kafka controller-eligible nodes
   ##
-  replicaCount: 3
+  replicaCount: 1
   ## @param controller.controllerOnly If set to true, controller nodes will be deployed as dedicated controllers, instead of controller+broker processes.
   ##
   controllerOnly: false
@@ -1088,7 +1088,7 @@ controller:
   persistence:
     ## @param controller.persistence.enabled Enable Kafka data persistence using PVC
     ##
-    enabled: false
+    enabled: true
     ## @param controller.persistence.existingClaim A manually managed Persistent Volume and Claim
     ## If defined, PVC must be created manually before volume will be bound
     ## The value is evaluated as a template
@@ -1107,7 +1107,7 @@ controller:
       - ReadWriteOnce
     ## @param controller.persistence.size PVC Storage Request for Kafka data volume
     ##
-    size: 8Gi
+    size: 1Gi
     ## @param controller.persistence.annotations Annotations for the PVC
     ##
     annotations: {}
@@ -2375,16 +2375,13 @@ provisioning:
     . /opt/bitnami/scripts/libos.sh
   
     while true; do
-    #  if /opt/bitnami/kafka/bin/kafka-broker-api-versions.sh --bootstrap-server "${KAFKA_SERVICE}" --command-config /shared/client.properties >/dev/null 2>&1; then
-    #    echo "Kafka is ready!"
-    #    break
-    #  fi
+      if /opt/bitnami/kafka/bin/kafka-broker-api-versions.sh --version --bootstrap-server "${KAFKA_SERVICE}" --command-config /shared/client.properties >/dev/null 2>&1; then
+        echo "Kafka is ready!"
+        break
+      fi
       echo "Waiting for Kafka to be ready..."
       sleep 5
     done
-    
-
-    
     
   ## @param provisioning.postScript Extra bash script to run after topic provisioning. /shared/client.properties is path to properties file with most needed configurations
   ##
