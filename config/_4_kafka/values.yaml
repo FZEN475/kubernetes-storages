@@ -796,7 +796,7 @@ controller:
   ## @param controller.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if controller.resources is set (controller.resources is recommended for production).
   ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
   ##
-  resourcesPreset: "small"
+  resourcesPreset: "medium"
   ## @param controller.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
   ## Example:
   ## resources:
@@ -2591,4 +2591,52 @@ provisioning:
   ##       - name: portname
   ##         containerPort: 1234
   ##
-  initContainers: []
+  initContainers:
+    - name: wait-for-available-kafka
+      image: docker.io/bitnami/kafka:4.0.0-debian-12-r8
+      imagePullPolicy: IfNotPresent
+      resources:
+        limits:
+          cpu: 750m
+          ephemeral-storage: 2Gi
+          memory: 1536Mi
+        requests:
+          cpu: 500m
+          ephemeral-storage: 50Mi
+          memory: 1Gi
+      securityContext:
+        allowPrivilegeEscalation: false
+        capabilities:
+          drop:
+            - ALL
+        readOnlyRootFilesystem: true
+        runAsGroup: 1001
+        runAsNonRoot: true
+        runAsUser: 1001
+        seLinuxOptions: {}
+
+      command:
+        - /bin/bash
+      args:
+        - -ec
+        - |
+          . /opt/bitnami/scripts/libos.sh
+          
+          exit_code=0
+          if ! retry_while "/opt/bitnami/kafka/bin/kafka-broker-api-versions.sh --bootstrap-server ${KAFKA_SERVICE} --command-config /shared/client.properties"; then
+              echo "Kafka is not ready"
+              exit_code=1
+          else
+              echo "Kafka ready"
+          fi
+          
+          exit "$exit_code"
+      env:
+        - name: KAFKA_SERVICE
+          value: kafka:9092
+      volumeMounts:
+        - name: shared
+          mountPath: /shared
+        - mountPath: /certs
+          name: kafka-client-certs
+          readOnly: true
