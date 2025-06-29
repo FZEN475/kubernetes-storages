@@ -701,9 +701,9 @@ controller:
   ## @param controller.overrideConfiguration Kafka configuration override for Kafka controller-eligible nodes. Values defined here takes precedence over the ones defined at `controller.config`
   ##
   overrideConfiguration:
-    allow.everyone.if.no.acl.found: true
     authorizer.class.name: org.apache.kafka.metadata.authorizer.StandardAuthorizer
-#    super.users: User:admin;User:controller_user;User:inter_broker_user
+    super.users: User:admin;User:controller_user;User:inter_broker_user
+    superUsers: User:admin;User:controller_user;User:inter_broker_user
 #    allow.everyone.if.no.acl.found: true
   ## @param controller.existingConfigmap Name of an existing ConfigMap with the Kafka configuration for Kafka controller-eligible nodes
   ##
@@ -2384,7 +2384,7 @@ provisioning:
   ##
   preScript: |
     while true; do
-      if /opt/bitnami/kafka/bin/kafka-broker-api-versions.sh --bootstrap-server "kafka1:9092" --command-config /shared/client.properties >/dev/null 2>&1; then
+      if /opt/bitnami/kafka/bin/kafka-broker-api-versions.sh --bootstrap-server "kafka:9092" --command-config /shared/client.properties >/dev/null 2>&1; then
         echo "Kafka is ready!"
         break
       fi
