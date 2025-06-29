@@ -2375,7 +2375,7 @@ provisioning:
     . /opt/bitnami/scripts/libos.sh
   
     while true; do
-      if /opt/bitnami/kafka/bin/kafka-broker-api-versions.sh --version --bootstrap-server "${KAFKA_SERVICE}" --command-config /shared/client.properties >/dev/null 2>&1; then
+      if /opt/bitnami/kafka/bin/kafka-broker-api-versions.sh --bootstrap-server "${KAFKA_SERVICE}" --command-config /shared/client.properties >/dev/null 2>&1; then
         echo "Kafka is ready!"
         break
       fi
