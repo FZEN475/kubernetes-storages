@@ -695,13 +695,14 @@ controller:
   ## ... will be transformed to:
   ##    process.roles=controller
   ##
-  config:
-    authorizer.class.name: org.apache.kafka.metadata.authorizer.StandardAuthorizer
-    allow.everyone.if.no.acl.found: true
+  config: {}
+
 #    super.users: User:admin
   ## @param controller.overrideConfiguration Kafka configuration override for Kafka controller-eligible nodes. Values defined here takes precedence over the ones defined at `controller.config`
   ##
-  overrideConfiguration: {}
+  overrideConfiguration:
+    authorizer.class.name: org.apache.kafka.metadata.authorizer.StandardAuthorizer
+    allow.everyone.if.no.acl.found: true
   ## @param controller.existingConfigmap Name of an existing ConfigMap with the Kafka configuration for Kafka controller-eligible nodes
   ##
   existingConfigmap: ""
