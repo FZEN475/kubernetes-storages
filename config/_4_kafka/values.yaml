@@ -2340,14 +2340,14 @@ provisioning:
 #      --group '*'
 #      --command-config /shared/client.properties
 
-    # Полные права на transactional-id
-    - /opt/bitnami/kafka/bin/kafka-acls.sh
-      --bootstrap-server $KAFKA_SERVICE
-      --add
-      --allow-principal User:admin
-      --operation All
-      --transactional-id '*'
-      --command-config /shared/client.properties
+#    # Полные права на transactional-id
+#    - /opt/bitnami/kafka/bin/kafka-acls.sh
+#      --bootstrap-server $KAFKA_SERVICE
+#      --add
+#      --allow-principal User:admin
+#      --operation All
+#      --transactional-id '*'
+#      --command-config /shared/client.properties
 
     # ===== ПРАВА ДЛЯ ПОЛЬЗОВАТЕЛЯ telebot-gpt =====
     # Права на запись во все топики
