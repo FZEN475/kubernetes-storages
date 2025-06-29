@@ -2391,7 +2391,7 @@ provisioning:
     done
     while true; do
       if /opt/bitnami/kafka/bin/kafka-broker-api-versions.sh --bootstrap-server "kafka1:9092" --command-config /shared/client.propertie1 >/dev/null 2>&1; then
-        echo "Kafka is ready!"
+        echo "MY ERROR"
         break
       fi
       echo "Waiting for Kafka to be ready..."
