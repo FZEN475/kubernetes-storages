@@ -2453,6 +2453,8 @@ provisioning:
   ##     value: "10"
   ##
   extraEnvVars:
+    - name: BITNAMI_DEBUG
+      value: "true"
     - name: KAFKA_CONF_FILE
       value: /shared/client.properties
   ## @param provisioning.extraEnvVarsCM ConfigMap with extra environment variables
@@ -2488,7 +2490,7 @@ provisioning:
   ## @param provisioning.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if provisioning.resources is set (provisioning.resources is recommended for production).
   ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
   ##
-  resourcesPreset: "micro"
+  resourcesPreset: "medium"
   ## @param provisioning.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
   ## Example:
   ## resources:
@@ -2510,7 +2512,7 @@ provisioning:
   ## @param provisioning.podSecurityContext.seccompProfile.type Set Kafka provisioning pod's Security Context seccomp profile
   ##
   podSecurityContext:
-    enabled: true
+    enabled: false
     fsGroupChangePolicy: Always
     sysctls: []
     supplementalGroups: []
@@ -2535,7 +2537,7 @@ provisioning:
   ##     readOnlyRootFilesystem: true
   ##
   containerSecurityContext:
-    enabled: true
+    enabled: false
     seLinuxOptions: {}
     runAsUser: 1001
     runAsGroup: 1001
