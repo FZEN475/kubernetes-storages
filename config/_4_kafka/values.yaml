@@ -2370,12 +2370,8 @@ provisioning:
   ## @param provisioning.preScript Extra bash script to run before topic provisioning. /shared/client.properties is path to properties file with most needed configurations
   ##
   preScript: |
-    #!/bin/bash
-
-    . /opt/bitnami/scripts/libos.sh
-  
     while true; do
-      if /opt/bitnami/kafka/bin/kafka-broker-api-versions.sh --bootstrap-server "${KAFKA_SERVICE}" --command-config /shared/client.properties >/dev/null 2>&1; then
+      if /opt/bitnami/kafka/bin/kafka-broker-api-versions.sh --bootstrap-server "kafka:9092" --command-config /shared/client.properties >/dev/null 2>&1; then
         echo "Kafka is ready!"
         break
       fi
