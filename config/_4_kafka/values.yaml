@@ -697,7 +697,8 @@ controller:
   ##
   config:
     authorizer.class.name: org.apache.kafka.metadata.authorizer.StandardAuthorizer
-    super.users: User:admin
+    allow.everyone.if.no.acl.found: true
+#    super.users: User:admin
   ## @param controller.overrideConfiguration Kafka configuration override for Kafka controller-eligible nodes. Values defined here takes precedence over the ones defined at `controller.config`
   ##
   overrideConfiguration: {}
