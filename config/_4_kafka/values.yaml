@@ -2544,8 +2544,8 @@ provisioning:
     runAsNonRoot: true
     allowPrivilegeEscalation: false
     readOnlyRootFilesystem: true
-    capabilities:
-      drop: ["ALL"]
+#    capabilities:
+#      drop: ["ALL"]
   ## @param provisioning.schedulerName Name of the k8s scheduler (other than default) for kafka provisioning
   ## ref: https://kubernetes.io/docs/tasks/administer-cluster/configure-multiple-schedulers/
   ##
