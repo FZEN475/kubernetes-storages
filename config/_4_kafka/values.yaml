@@ -132,6 +132,7 @@ existingKraftSecret: ""
 ##    process.roles=broker
 ##
 config: {}
+
 ## @param overrideConfiguration Kafka common configuration override. Values defined here takes precedence over the ones defined at `config`
 ##
 overrideConfiguration: {}
@@ -694,7 +695,9 @@ controller:
   ## ... will be transformed to:
   ##    process.roles=controller
   ##
-  config: {}
+  config:
+    authorizer.class.name: org.apache.kafka.metadata.authorizer.StandardAuthorizer
+    super.users: User:admin
   ## @param controller.overrideConfiguration Kafka configuration override for Kafka controller-eligible nodes. Values defined here takes precedence over the ones defined at `controller.config`
   ##
   overrideConfiguration: {}
