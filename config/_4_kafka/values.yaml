@@ -2311,8 +2311,8 @@ provisioning:
   ##      --list"
   ##
   extraProvisioningCommands:
-#    # ===== ПРАВА ДЛЯ ПОЛЬЗОВАТЕЛЯ (telebot-gpt) =====
-#    # Полные права на топики telebot-gpt-*
+    # ===== ПРАВА ДЛЯ ПОЛЬЗОВАТЕЛЯ (telebot-gpt) =====
+    # Полные права на топики telebot-gpt-*
     - >-
       /opt/bitnami/kafka/bin/kafka-acls.sh 
       --bootstrap-server $KAFKA_SERVICE 
@@ -2323,6 +2323,7 @@ provisioning:
       --producer 
       --topic telebot-gpt- 
       --resource-pattern-type prefixed
+    # И любые группы (паттерн * работает только при --resource-pattern-type literal
     - >-
       /opt/bitnami/kafka/bin/kafka-acls.sh 
       --bootstrap-server $KAFKA_SERVICE 
