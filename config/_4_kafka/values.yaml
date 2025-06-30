@@ -2414,7 +2414,11 @@ provisioning:
   ##   - name: KAFKA_CFG_BACKGROUND_THREADS
   ##     value: "10"
   ##
-  extraEnvVars: []
+  extraEnvVars:
+    - name: BITNAMI_DEBUG
+      value: "true"
+    - name: KAFKA_CONF_FILE
+      value: /shared/client.properties
   ## @param provisioning.extraEnvVarsCM ConfigMap with extra environment variables
   ##
   extraEnvVarsCM: ""
