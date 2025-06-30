@@ -2315,8 +2315,8 @@ provisioning:
 #    # Полные права на топики telebot-gpt-*
     - >-
       /opt/bitnami/kafka/bin/kafka-acls.sh 
-      --bootstrap-server "kafka:9092" 
-      --command-config /tmp/client.properties.admin 
+      --bootstrap-server $KAFKA_SERVICE 
+      --command-config /shared/client.properties
       --add 
       --allow-principal User:telebot-gpt 
       --consumer 
@@ -2342,7 +2342,7 @@ provisioning:
 #    done
   preScript: |
     while true; do
-      if /opt/bitnami/kafka/bin/kafka-topics.sh --list --bootstrap-server kafka:9092 --command-config /shared/client.properties >/dev/null 2>&1; then
+      if /opt/bitnami/kafka/bin/kafka-topics.sh --list --bootstrap-server ${KAFKA_SERVICE} --command-config /shared/client.properties >/dev/null 2>&1; then
         echo "Kafka is ready!"
         break
       fi
