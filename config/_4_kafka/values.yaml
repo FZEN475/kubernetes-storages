@@ -700,10 +700,10 @@ controller:
 #    super.users: User:admin
   ## @param controller.overrideConfiguration Kafka configuration override for Kafka controller-eligible nodes. Values defined here takes precedence over the ones defined at `controller.config`
   ##
-  overrideConfiguration:
-    authorizer.class.name: org.apache.kafka.metadata.authorizer.StandardAuthorizer
-    super.users: User:admin;User:controller_user;User:inter_broker_user
-    superUsers: User:admin;User:controller_user;User:inter_broker_user
+  overrideConfiguration: {}
+#    authorizer.class.name: org.apache.kafka.metadata.authorizer.StandardAuthorizer
+#    super.users: User:admin;User:controller_user;User:inter_broker_user
+#    superUsers: User:admin;User:controller_user;User:inter_broker_user
 #    allow.everyone.if.no.acl.found: true
   ## @param controller.existingConfigmap Name of an existing ConfigMap with the Kafka configuration for Kafka controller-eligible nodes
   ##
@@ -732,9 +732,7 @@ controller:
   ##   - name: KAFKA_CFG_BACKGROUND_THREADS
   ##     value: "10"
   ##
-  extraEnvVars:
-    - name: KAFKA_SUPER_USERS
-      value: "User:admin;User:controller_user;User:inter_broker_user"
+  extraEnvVars: []
   ## @param controller.extraEnvVarsCM ConfigMap with extra environment variables
   ##
   extraEnvVarsCM: ""
@@ -2307,11 +2305,11 @@ provisioning:
   ##      --command-config /shared/client.properties
   ##      --list"
   ##
-  extraProvisioningCommands:
-    - /opt/bitnami/kafka/bin/kafka-acls.sh \
-      --bootstrap-server $KAFKA_SERVICE \
-      --list \
-      --command-config /shared/client.properties
+  extraProvisioningCommands: []
+#    - /opt/bitnami/kafka/bin/kafka-acls.sh \
+#      --bootstrap-server $KAFKA_SERVICE \
+#      --list \
+#      --command-config /shared/client.properties
 #    # ===== ПРАВА ДЛЯ АДМИНИСТРАТОРА (admin) =====
 #    # Полные права на кластер
 #    - /opt/bitnami/kafka/bin/kafka-acls.sh
@@ -2349,33 +2347,33 @@ provisioning:
 #      --transactional-id '*'
 #      --command-config /shared/client.properties
 
-    # ===== ПРАВА ДЛЯ ПОЛЬЗОВАТЕЛЯ telebot-gpt =====
-    # Права на запись во все топики
-    - /opt/bitnami/kafka/bin/kafka-acls.sh
-      --bootstrap-server $KAFKA_SERVICE
-      --add
-      --allow-principal User:telebot-gpt
-      --operation Write
-      --topic '*'
-      --command-config /shared/client.properties
-
-    # Права на чтение всех топиков
-    - /opt/bitnami/kafka/bin/kafka-acls.sh
-      --bootstrap-server $KAFKA_SERVICE
-      --add
-      --allow-principal User:telebot-gpt
-      --operation Read
-      --topic '*'
-      --command-config /shared/client.properties
-
-    # Права на доступ к consumer-группам
-    - /opt/bitnami/kafka/bin/kafka-acls.sh
-      --bootstrap-server $KAFKA_SERVICE
-      --add
-      --allow-principal User:telebot-gpt
-      --operation Read
-      --group '*'
-      --command-config /shared/client.properties
+#    # ===== ПРАВА ДЛЯ ПОЛЬЗОВАТЕЛЯ telebot-gpt =====
+#    # Права на запись во все топики
+#    - /opt/bitnami/kafka/bin/kafka-acls.sh
+#      --bootstrap-server $KAFKA_SERVICE
+#      --add
+#      --allow-principal User:telebot-gpt
+#      --operation Write
+#      --topic '*'
+#      --command-config /shared/client.properties
+#
+#    # Права на чтение всех топиков
+#    - /opt/bitnami/kafka/bin/kafka-acls.sh
+#      --bootstrap-server $KAFKA_SERVICE
+#      --add
+#      --allow-principal User:telebot-gpt
+#      --operation Read
+#      --topic '*'
+#      --command-config /shared/client.properties
+#
+#    # Права на доступ к consumer-группам
+#    - /opt/bitnami/kafka/bin/kafka-acls.sh
+#      --bootstrap-server $KAFKA_SERVICE
+#      --add
+#      --allow-principal User:telebot-gpt
+#      --operation Read
+#      --group '*'
+#      --command-config /shared/client.properties
 
   ## @param provisioning.parallel Number of provisioning commands to run at the same time
   ##
