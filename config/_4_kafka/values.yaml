@@ -2321,10 +2321,18 @@ provisioning:
       --allow-principal User:telebot-gpt 
       --consumer 
       --producer 
-      --group '*' 
       --topic telebot-gpt- 
       --resource-pattern-type prefixed
-
+    - >-
+      /opt/bitnami/kafka/bin/kafka-acls.sh 
+      --bootstrap-server $KAFKA_SERVICE 
+      --command-config /shared/client.properties
+      --add 
+      --allow-principal User:telebot-gpt 
+      --consumer 
+      --producer 
+      --group '*' 
+      --resource-pattern-type literal
 
   ## @param provisioning.parallel Number of provisioning commands to run at the same time
   ##
