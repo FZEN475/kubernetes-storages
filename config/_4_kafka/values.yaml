@@ -2332,7 +2332,7 @@ provisioning:
   ##
   preScript: |
     while true; do
-      if /opt/bitnami/kafka/bin/kafka-broker-api-versions.sh --bootstrap-server "kafka:9092" --command-config /shared/client.properties >/dev/null 2>&1; then
+      if /opt/bitnami/kafka/bin/kafka-broker-api-versions.sh --bootstrap-server ${KAFKA_SERVICE} --command-config /shared/client.properties >/dev/null 2>&1; then
         echo "Kafka is ready!"
         break
       fi
@@ -2413,11 +2413,7 @@ provisioning:
   ##   - name: KAFKA_CFG_BACKGROUND_THREADS
   ##     value: "10"
   ##
-  extraEnvVars:
-    - name: BITNAMI_DEBUG
-      value: "true"
-    - name: KAFKA_CONF_FILE
-      value: /shared/client.properties
+  extraEnvVars: []
   ## @param provisioning.extraEnvVarsCM ConfigMap with extra environment variables
   ##
   extraEnvVarsCM: ""
