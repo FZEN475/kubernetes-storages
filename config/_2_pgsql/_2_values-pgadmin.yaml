@@ -318,18 +318,18 @@ containerSecurityContext:
 ## Ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
 ##
 livenessProbe:
-  initialDelaySeconds: 30
+  initialDelaySeconds: 90
   periodSeconds: 60
-  timeoutSeconds: 15
+  timeoutSeconds: 30
   successThreshold: 1
-  failureThreshold: 3
+  failureThreshold: 5
 
 readinessProbe:
-  initialDelaySeconds: 30
+  initialDelaySeconds: 90
   periodSeconds: 60
-  timeoutSeconds: 15
+  timeoutSeconds: 30
   successThreshold: 1
-  failureThreshold: 3
+  failureThreshold: 5
 
 ## Required to be enabled pre pgAdmin4 4.16 release, to set the ACL on /var/lib/pgadmin.
 ## Ref: https://kubernetes.io/docs/concepts/workloads/pods/init-containers/
