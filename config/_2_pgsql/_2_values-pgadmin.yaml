@@ -227,8 +227,10 @@ env:
       value: "0.0.0.0"
     - name: PGADMIN_LISTEN_PORT
       value: "443"
-    - name: PGADMIN_CONFIG_CONSOLE_LOG_LEVEL
-      value: "10"
+#    - name: PGADMIN_CONFIG_CONSOLE_LOG_LEVEL
+#      value: "10"
+    - name: PGADMIN_CONFIG_UPGRADE_CHECK_ENABLED
+      value: "False"
 
 ## Additional environment variables from ConfigMaps
 envVarsFromConfigMaps: []

@@ -9,56 +9,56 @@
     - {name: "bitnami", url: "https://charts.bitnami.com/bitnami"}
     - { name: "runix", url: "https://helm.runix.net/" }
 
-- name: configmap pgsql-conf
-  kubernetes.core.k8s:
-    state: absent
-    namespace: storage
-    definition:
-      apiVersion: v1
-      kind: ConfigMap
-      metadata:
-        name: pgsql-conf
-
-- name: configmap pgsql-conf
-  kubernetes.core.k8s:
-    state: present
-    namespace: storage
-    definition:
-      apiVersion: v1
-      kind: ConfigMap
-      metadata:
-        name: pgsql-conf
-      data:
-#        postgresql.conf: "{{ lookup('ansible.builtin.file', '/source/config/_2_pgsql/postgresql.conf') }}"
-        pg_hba.conf: "{{ lookup('ansible.builtin.file', '/source/config/_2_pgsql/pg_hba.conf') }}"
-
-- name: Copy values
-  ansible.builtin.copy:
-    src: '/source/config/_2_pgsql/_1_values-pgsql.yaml'
-    dest: '/tmp/values_pgsql.yaml'
-    mode: "0640"
-
-- name: Remove postgresql
-  kubernetes.core.helm:
-    name: postgresql
-    chart_ref: bitnami/postgresql
-    release_namespace: storage
-    create_namespace: true
-    state: absent
-    wait: true
-    values_files:
-      - /tmp/values_pgsql.yaml
-
-- name: Install postgresql
-  kubernetes.core.helm:
-    name: postgresql
-    chart_ref: bitnami/postgresql
-    release_namespace: storage
-    create_namespace: true
-    state: present
-    wait: false
-    values_files:
-      - /tmp/values_pgsql.yaml
+#- name: configmap pgsql-conf
+#  kubernetes.core.k8s:
+#    state: absent
+#    namespace: storage
+#    definition:
+#      apiVersion: v1
+#      kind: ConfigMap
+#      metadata:
+#        name: pgsql-conf
+#
+#- name: configmap pgsql-conf
+#  kubernetes.core.k8s:
+#    state: present
+#    namespace: storage
+#    definition:
+#      apiVersion: v1
+#      kind: ConfigMap
+#      metadata:
+#        name: pgsql-conf
+#      data:
+##        postgresql.conf: "{{ lookup('ansible.builtin.file', '/source/config/_2_pgsql/postgresql.conf') }}"
+#        pg_hba.conf: "{{ lookup('ansible.builtin.file', '/source/config/_2_pgsql/pg_hba.conf') }}"
+#
+#- name: Copy values
+#  ansible.builtin.copy:
+#    src: '/source/config/_2_pgsql/_1_values-pgsql.yaml'
+#    dest: '/tmp/values_pgsql.yaml'
+#    mode: "0640"
+#
+#- name: Remove postgresql
+#  kubernetes.core.helm:
+#    name: postgresql
+#    chart_ref: bitnami/postgresql
+#    release_namespace: storage
+#    create_namespace: true
+#    state: absent
+#    wait: true
+#    values_files:
+#      - /tmp/values_pgsql.yaml
+#
+#- name: Install postgresql
+#  kubernetes.core.helm:
+#    name: postgresql
+#    chart_ref: bitnami/postgresql
+#    release_namespace: storage
+#    create_namespace: true
+#    state: present
+#    wait: false
+#    values_files:
+#      - /tmp/values_pgsql.yaml
 
 - name: Creating servers_tmp
   ansible.builtin.set_fact:
@@ -82,7 +82,7 @@
     dest: '/tmp/values_pgadmin.yaml'
     mode: "0640"
 
-- name: Удаление pgadmin4
+- name: Remove pgadmin4
   kubernetes.core.helm:
     name: pgadmin4
     chart_ref: runix/pgadmin4
@@ -93,7 +93,7 @@
     values_files:
       - /tmp/values_pgadmin.yaml
 
-- name: Установка pgadmin4
+- name: Install pgadmin4
   kubernetes.core.helm:
     name: pgadmin4
     chart_ref: runix/pgadmin4
